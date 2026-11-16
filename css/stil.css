@@ -1,0 +1,340 @@
+/* Weltraum Salon: Gestaltung der Seite. Farben und Schriften stehen in variablen.css */
+/* Grundlagen */
+html, body { margin: 0; padding: 0; }
+img, video { max-width: 100%; }
+[hidden] { display: none !important; }
+/* Layout: Tag oben (Wolken), Nacht unten (ARCHIV). Eine Spalte, links bündig, jede Rubrik in einer Logo-Farbe. */
+:root {
+  --papier: #fbfcff;
+  --tinte: #16182b;
+  --grau: #5b6078;
+  --linie: #e3e6f2;
+  --orange: #ff7f3a;
+  --ultramarin: #4b5be0;
+  --gelb: #f2b200;
+  --pink: #df2fae;
+  --himmel: #2b86df;
+  --nacht: #0d1030;
+  --nacht-text: #e8eaff;
+  --nacht-grau: #a3a8d6;
+  --titel: "Fredoka", "Arial Rounded MT Bold", system-ui, sans-serif;
+  --text: "Space Mono", "Courier New", ui-monospace, monospace;
+  --breite: 72rem;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 7.5rem; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { background: var(--papier); color: var(--tinte); font: 400 1.0625rem/1.6 var(--text); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--papier); }
+a { color: inherit; }
+a:focus-visible, summary:focus-visible { outline: 3px solid var(--ultramarin); outline-offset: 3px; border-radius: 4px; }
+.innen { max-width: var(--breite); margin-inline: auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.logo { display: block; height: auto; }
+
+/* Kopfleiste */
+/* Menü liegt auf dem Wolkenfoto, bekommt beim Scrollen einen hellen Grund */
+.kopf { position: fixed; top: 0; left: 0; right: 0; z-index: 9; padding-top: env(safe-area-inset-top, 0px); color: #fff; transition: background .25s, color .25s; }
+.kopf.fest { background: color-mix(in srgb, var(--papier) 94%, transparent); backdrop-filter: blur(8px); color: var(--tinte); box-shadow: 0 1px 0 var(--linie); }
+.kopf .innen { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; padding-block: .8rem; }
+.kopf .logo { width: 11.5rem; flex: none; filter: brightness(0); }
+.menue { display: flex; gap: .25rem; overflow-x: auto; scrollbar-width: none; min-width: 0; }
+.menue::-webkit-scrollbar { display: none; }
+.menue a { flex: none; text-decoration: none; font: 600 clamp(.95rem, 1.4vw, 1.15rem)/1 var(--titel); letter-spacing: .05em; padding: .65rem .9rem; border-radius: 99px; white-space: nowrap; }
+.kopf:not(.fest) .menue a { text-shadow: 0 1px 10px rgb(0 30 80 / .45); }
+.menue a:hover { background: rgb(255 255 255 / .2); }
+.kopf.fest .menue a:hover { background: var(--linie); }
+.menue-knopf { display: none; }
+/* Handy: Menü klappt rechts oben auf */
+@media (max-width: 760px) {
+  .kopf .innen { flex-wrap: wrap; gap: 0; padding-block: .6rem; }
+  .kopf .logo { width: 9rem; }
+  .menue-knopf { display: grid; gap: 5px; place-content: center; width: 44px; height: 44px; margin-right: -8px; padding: 0; background: none; border: 0; border-radius: 50%; color: inherit; cursor: pointer; }
+  .menue-knopf span { display: block; width: 24px; height: 2.5px; border-radius: 2px; background: currentColor; transition: transform .2s, opacity .2s; }
+  .kopf:not(.fest):not(.offen) .menue-knopf span { box-shadow: 0 1px 6px rgb(0 30 80 / .35); }
+  .kopf.offen .menue-knopf span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+  .kopf.offen .menue-knopf span:nth-child(2) { opacity: 0; }
+  .kopf.offen .menue-knopf span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+  .menue { display: none; flex-basis: 100%; flex-direction: column; overflow: visible; padding-block: .5rem .75rem; }
+  .kopf.offen { background: var(--papier); color: var(--tinte); box-shadow: 0 12px 30px -15px rgb(22 24 43 / .4); }
+  .kopf.offen .menue { display: flex; }
+  .kopf.offen .menue a { text-shadow: none; }
+  .menue a { font-size: 1.3rem; padding: .85rem 0; border-radius: 0; border-top: 1px solid var(--linie); }
+}
+
+/* Wolken */
+.wolken { position: relative; background: #6fa6e6; display: grid; color: #fff; overflow: hidden; }
+/* Langsamer Zoom: die Wolke wird größer */
+@keyframes heranzoomen { from { transform: scale(1); } to { transform: scale(1.2); } }
+.wolken .foto { transform-origin: 50% 62%; animation: heranzoomen 30s ease-out forwards; }
+@media (prefers-reduced-motion: reduce) { .wolken .foto { animation: none; } }
+.wolken .foto { grid-area: 1 / 1; width: 100%; height: min(70.4vw, 100svh); object-fit: cover; object-position: 50% calc(100% + 4.6vw); display: block; }
+.wolken::after { content: ""; position: absolute; inset: 55% 0 0; background: linear-gradient(transparent, rgb(20 40 20 / .35)); }
+.wolken .innen { grid-area: 1 / 1; position: relative; z-index: 1; width: 100%; }
+.wolken .logo { position: absolute; left: 50%; bottom: 14.5vw; transform: translate(-50%, 50%); width: min(75%, 66rem); opacity: .93; filter: brightness(0) invert(1) drop-shadow(0 2px 18px rgb(0 40 110 / .3)); }
+.wolken p { position: absolute; left: 0; right: 0; bottom: clamp(.6rem, 3vw, 2rem); margin: 0; text-align: center; font: 600 clamp(.9rem, 1.8vw, 1.25rem)/1.3 var(--text); letter-spacing: .02em; text-shadow: 0 1px 12px rgb(0 0 0 / .45); }
+
+/* Handy: Wolkenfoto fast bildschirmhoch, seitlich angeschnitten, Logo so breit wie das Handy */
+@media (max-width: 760px) {
+  .wolken .foto { height: 88svh; object-position: 50% 100%; }
+  .wolken .logo { width: calc(100% - 2rem); bottom: 28%; }
+  .wolken p { bottom: 1.1rem; }
+}
+
+/* Rubriken */
+section { padding-block: clamp(3.5rem, 8vw, 6.5rem); }
+section + section { border-top: 2px solid var(--tinte); }
+.rubrik { font: 600 clamp(1.05rem, 2.2vw, 1.3rem)/1.2 var(--titel); letter-spacing: .08em; color: var(--farbe); margin: 0 0 clamp(1.5rem, 3vw, 2.25rem); display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; }
+.rubrik::before { content: ""; width: .7rem; height: .7rem; border-radius: 50%; background: var(--farbe); }
+.lead { font-size: clamp(1.2rem, 2.4vw, 1.55rem); line-height: 1.5; max-width: 38em; margin: 0; }
+.fliess { max-width: 38em; }
+.fliess p { margin: 0 0 1em; }
+h3 { font: 600 clamp(1.15rem, 2.4vw, 1.5rem)/1.2 var(--titel); margin: 0; text-wrap: balance; }
+
+/* AKTUELL */
+.termin { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(1.5rem, 4vw, 3.5rem); align-items: start; }
+.termin img { width: 100%; border-radius: 10px; }
+.datum { display: flex; align-items: baseline; flex-wrap: wrap; gap: .25rem .9rem; margin-bottom: 1rem; }
+.datum b { font: 700 clamp(2.4rem, 6vw, 3.6rem)/1 var(--titel); color: var(--orange); letter-spacing: 0; }
+.datum span { font: 600 1rem/1.2 var(--titel); }
+.heute { font: 600 .75rem/1 var(--titel); background: var(--orange); color: #fff; padding: .4rem .6rem; border-radius: 99px; align-self: center; }
+.termin h3 { margin-bottom: .35rem; }
+.unter { color: var(--grau); margin: 0 0 1.25rem; }
+.zusatz { border-left: 3px solid var(--orange); padding-left: .9rem; margin: 0 0 1.25rem; }
+details summary { cursor: pointer; font-weight: 600; color: var(--ultramarin); list-style: none; }
+details summary::-webkit-details-marker { display: none; }
+details summary::after { content: " +"; }
+details[open] summary::after { content: " –"; }
+details .fliess { margin-top: 1rem; }
+.hinweis { margin-top: clamp(2.5rem, 5vw, 3.5rem); padding: 1.15rem 1.5rem; border-radius: 12px; background: var(--orange); color: #fff; max-width: 36rem; }
+.hinweis p { margin: 0; font: 500 clamp(1.05rem, 1.8vw, 1.25rem)/1.35 var(--titel); }
+.hinweis a { text-decoration-thickness: 2px; text-underline-offset: .2em; }
+
+/* DER RAUM */
+.fakten { display: flex; flex-wrap: wrap; gap: .6rem; margin: 0 0 2rem; padding: 0; list-style: none; }
+.fakten li { font: 600 .85rem/1 var(--titel); padding: .65rem .85rem; border-radius: 99px; background: color-mix(in srgb, var(--gelb) 22%, var(--papier)); }
+.raumbilder { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 1.25rem; }
+.raumbilder figure:last-child { grid-column: 1 / -1; }
+.raumbilder figure:last-child img { aspect-ratio: 2 / 1; }
+@media (max-width: 600px) { .raumbilder { grid-template-columns: minmax(0, 1fr); } .raumbilder figure:last-child img { aspect-ratio: 4 / 3; } }
+.raumbilder figure { margin: 0; }
+.raumbilder img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 10px; display: block; }
+.raumbilder figcaption { font-size: .92rem; color: var(--grau); margin-top: .5rem; }
+.raumbilder figcaption b { color: var(--tinte); }
+
+/* WER SIND WIR */
+.wir { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 2rem; max-width: 46rem; }
+.person { display: grid; gap: .8rem; justify-items: start; }
+.platzhalter-foto { width: 9rem; aspect-ratio: 1; border-radius: 50%; background: color-mix(in srgb, var(--pink) 14%, var(--papier)); border: 2px dashed color-mix(in srgb, var(--pink) 50%, var(--papier)); display: grid; place-items: center; color: var(--pink); font: 600 .75rem/1 var(--titel); }
+.person p { margin: 0; color: var(--grau); }
+
+/* VISION: runde Sprechblasen, von oben nach unten, leicht überlappend */
+.raum-fuer-alles { font: 600 clamp(1.3rem, 3vw, 1.8rem)/1.2 var(--titel); margin: 0 0 1.5rem; color: var(--ultramarin); }
+#salon { background: linear-gradient(#f7faff, #f3f8ff); }
+.blasen { --d: clamp(14.5rem, 40vw, 18.5rem); display: flex; flex-direction: column; max-width: calc(var(--d) * 1.62); }
+.blase { position: relative; width: var(--d); aspect-ratio: 1; border-radius: 50%; margin: 0; padding: 2.1rem; display: grid; place-content: center; text-align: center; font-size: 1rem; line-height: 1.4; background: #fff; border: 2px solid var(--tinte); box-shadow: 0 10px 24px -10px rgb(22 24 43 / .35); }
+.blase + .blase { margin-top: calc(var(--d) * -.36); }
+.blase:nth-child(odd) { align-self: flex-start; }
+.blase:nth-child(even) { align-self: flex-end; }
+.blase b { display: block; font: 700 1.25rem/1 var(--titel); margin-bottom: .35rem; }
+
+/* Salon-Text und AKTUELL auf Weiß */
+#salon { background: #fff; }
+
+/* Alle Inhaltsbilder: weißer Rand und leichter Schatten, damit sie sich vom Wolkenfoto abheben */
+:root { --schatten: 0 8px 20px -8px rgb(10 30 70 / .5); }
+.termin img, .raumbilder img, .projekt img.plakat, .streifen img, .archiv img, .menschen-foto img { border: 3px solid #fff; box-shadow: var(--schatten); }
+
+/* Rubrik-Überschriften: groß, alle orange, außerhalb der Kästen */
+.rubrik, .nacht .rubrik, .himmel section.nacht .rubrik { font-size: clamp(2.4rem, 4.2vw, 2.8rem); color: var(--dunkelblau); }
+:root { --dunkelblau: #1a2a6c; }
+.himmel .rubrik { text-shadow: none; }
+.rubrik::before, .nacht .rubrik::before, .himmel section.nacht .rubrik::before { display: none; }
+
+/* AKTUELL: jeder Termin ist ein weißer Kasten, Flyer groß oben, Text darunter.
+   Nur das Datum in Fredoka, alles andere in der Textschrift Figtree. */
+.termin { --gross: clamp(1.9rem, 4.6vw, 2.8rem); --normal: clamp(1.2rem, 2vw, 1.4rem); display: block; max-width: 52rem; background: rgb(255 255 255 / .94); border-radius: 28px; padding: clamp(1.1rem, 3.2vw, 2.25rem); box-shadow: var(--schatten); text-shadow: none; font-size: var(--normal); line-height: 1.5; }
+.termin + .termin { margin-top: clamp(1.5rem, 4vw, 2.5rem); }
+.termin img { display: block; width: auto; max-width: 100%; height: auto; max-height: 85vh; margin-inline: auto; border: 0; box-shadow: none; border-radius: 14px; }
+/* Nur zwei Textgrößen im Kasten: groß für Datum und Name, normal für alles andere */
+.termin-text { padding: clamp(1.25rem, 3vw, 2rem) 0 0; }
+.termin .datum { margin-bottom: .6rem; }
+.termin .datum b { font-size: var(--gross); }
+.termin .datum span, .termin .art, .termin .unter, .termin .zusatz, .termin summary, .termin .fliess { font: inherit; font-size: var(--normal); }
+.termin .datum span, .termin .art, .termin summary { font-weight: 600; }
+.termin h3 { font: 700 var(--gross)/1.1 var(--text); margin-bottom: .4rem; }
+.termin .art { margin: 0 0 .75rem; }
+.termin h3 { text-transform: uppercase; letter-spacing: .02em; }
+.termin .zusatz { border-left: 0; padding-left: 0; }
+/* VISION: alle Sätze als ein Absatz direkt auf den Wolken */
+/* Telegram-Kasten: direkt über AKTUELL, auf dem Desktop rund drei Viertel der Bildschirmbreite */
+.himmel .hinweis { margin: 0 0 clamp(2.5rem, 6vw, 4.5rem); max-width: none; width: min(100%, 75vw); padding: clamp(1.15rem, 2.5vw, 2rem) clamp(1.5rem, 3vw, 2.75rem); border-radius: 18px; text-shadow: none; box-shadow: var(--schatten); }
+.himmel .hinweis p { font-size: clamp(1.15rem, 2.2vw, 1.9rem); }
+@media (max-width: 760px) { .himmel .hinweis { width: 100%; } }
+#raum .hinweis { margin: clamp(2rem, 5vw, 3rem) 0 0; }
+.himmel .hinweis p { font-family: var(--text); font-weight: 500; }
+.himmel .hinweis a { font-family: var(--titel); font-weight: 600; }
+/* RAUM: Text weiß mit leichtem dunklem Schatten, wie bei VISION */
+#raum .innen, #raum figcaption, #raum figcaption b { color: var(--tinte); text-shadow: none; }
+/* ARCHIV und PROJEKTE: Text weiß mit dunklem Schatten */
+#archiv .rubrik small, #archiv figcaption, #projekte .projekt, #projekte .projekt h3, #projekte .projekt .marke, #projekte .projekt .fliess, #projekte .projekt .namen { color: var(--tinte); text-shadow: none; }
+#archiv figcaption { font-size: .9rem; }
+#projekte .projekt details summary { color: var(--ultramarin); text-decoration: underline; text-underline-offset: .2em; }
+.vision-text { max-width: 46rem; color: var(--tinte); font-weight: 500; text-shadow: none; }
+.himmel .raum-fuer-alles { color: var(--tinte); text-shadow: none; }
+
+/* MENSCHEN: ein gemeinsames Foto */
+.menschen-foto { margin: 0; max-width: 34rem; }
+.menschen-foto img { display: block; width: 100%; height: auto; border-radius: 10px; }
+.menschen-foto figcaption { margin-top: .9rem; font: 600 clamp(1.1rem, 2.2vw, 1.35rem)/1.3 var(--titel); }
+.lead.intro { max-width: none; text-align: justify; -webkit-hyphens: auto; hyphens: auto; }
+.nacht details summary { color: #b9c2ff; }
+
+/* Ab VISION: das große Wolkenfoto steht still, die Kästen rutschen darüber */
+.himmel { position: relative; isolation: isolate; clip-path: inset(0); }
+.himmel-bild { position: fixed; inset: 0; z-index: -1; background: #3f6fb0 url(../bilder/bigclouds.jpg) center / cover no-repeat; }
+.himmel section { background: none; border-top: 0; padding-block: clamp(1.5rem, 4vw, 3rem); }
+.himmel section:first-of-type { padding-top: clamp(4rem, 10vw, 8rem); }
+.himmel section:last-of-type { padding-bottom: clamp(4rem, 10vw, 8rem); }
+.himmel .nacht + .nacht { border-top: 0; }
+/* Ohne Kästen: Texte und Bilder liegen direkt auf dem Foto, ein heller Schein hilft beim Lesen */
+.himmel .innen { text-shadow: 0 0 2px rgb(255 255 255 / .9), 0 0 14px rgb(255 255 255 / .85); }
+.himmel .nacht { background: none; overflow: visible; --nacht-text: var(--tinte); --nacht-grau: #2f3450; }
+.himmel .nacht .rubrik, .himmel .projekt h3 { color: var(--tinte); }
+.himmel .nacht .rubrik::before { background: var(--tinte); }
+.himmel .nacht details summary { color: var(--ultramarin); }
+.himmel .projekt { background: none; border: 0; padding: 0; }
+.himmel .projekt .marke { color: var(--tinte); }
+.himmel .fuss .logo { filter: brightness(0); }
+.himmel .kontakt a { text-decoration-color: currentColor; }
+.himmel .sterne { display: none; }
+
+/* ARCHIV: Nacht */
+.nacht { background: radial-gradient(1200px 500px at 80% 0%, #232a6b 0%, transparent 70%), var(--nacht); color: var(--nacht-text); border-top: 0; position: relative; overflow: hidden; }
+.nacht + .nacht { border-top: 1px solid rgb(255 255 255 / .08); }
+.nacht .sterne { position: absolute; inset: 0; pointer-events: none; opacity: .7; }
+.nacht .innen { position: relative; }
+.nacht .rubrik { color: #fff; }
+.nacht .rubrik::before { background: #fff; }
+.nacht .rubrik small { flex-basis: 100%; font: 400 clamp(.95rem, 2vw, 1.2rem)/1.3 var(--text); letter-spacing: 0; color: var(--nacht-grau); margin-top: .7rem; font-style: italic; }
+.projekt { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: clamp(1.5rem, 4vw, 3rem); align-items: start; padding: clamp(1.25rem, 3vw, 2rem); border-radius: 14px; background: rgb(255 255 255 / .05); border: 1px solid rgb(255 255 255 / .1); margin-bottom: clamp(3rem, 6vw, 4.5rem); }
+.projekt img.plakat { width: 100%; border-radius: 8px; }
+.projekt .marke { font: 600 .75rem/1 var(--titel); color: var(--gelb); margin: 0 0 .7rem; }
+.projekt h3 { color: #fff; margin-bottom: 1rem; }
+.projekt .fliess { color: var(--nacht-text); }
+.projekt .namen { font-size: .9rem; color: var(--nacht-grau); }
+.streifen { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .5rem; margin-top: 1.25rem; }
+.streifen img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 6px; display: block; }
+.archiv-titel { font: 600 1rem/1.2 var(--titel); color: var(--nacht-grau); margin: 0 0 1.25rem; }
+/* Archiv in Reihen: neueste oben links, älteste unten rechts */
+.archiv { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr)); gap: 1.5rem 1rem; align-items: start; }
+.archiv figure { margin: 0 0 1rem; break-inside: avoid; }
+.archiv img { width: 100%; display: block; border-radius: 6px; filter: saturate(.85); transition: filter .25s; }
+.archiv figure:hover img { filter: none; }
+.archiv figcaption { font-size: .8rem; color: var(--nacht-grau); margin-top: .35rem; }
+@media (max-width: 760px) {
+  .termin, .projekt { grid-template-columns: minmax(0, 1fr); }
+  .streifen { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .archiv { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem .6rem; }
+}
+
+/* KONTAKT */
+.kontakt { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: 2rem; }
+.kontakt h3 { font-size: .85rem; color: var(--nacht-grau); margin-bottom: .6rem; }
+.kontakt p { margin: 0; font-size: 1.1rem; }
+.kontakt a { text-decoration-color: rgb(255 255 255 / .35); text-underline-offset: .2em; }
+.fuss { margin-top: clamp(3rem, 6vw, 5rem); display: grid; gap: 1.25rem; }
+.fuss .logo { width: min(100%, 26rem); filter: brightness(0) invert(1); opacity: .9; }
+.fuss small { color: var(--nacht-grau); }
+.entwurf { background: var(--gelb); color: var(--tinte); font: 600 .78rem/1.4 var(--titel); text-align: center; padding: .5rem 16px; }
+/* Stand 14.11.: Archiv als Kacheln ohne Bildzeilen, rund vier Fünftel der Bildschirmbreite.
+   Ein kleines Skript verteilt die Plakate auf Spalten, neueste oben. */
+.archiv { display: flex; gap: 14px; align-items: flex-start; }
+.archiv-spalte { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.archiv figure { margin: 0; }
+.archiv video { display: block; width: 100%; border: 3px solid #fff; border-radius: 6px; box-shadow: var(--schatten); }
+
+.himmel .rubrik { text-shadow: none; }
+
+/* Stand 14.11.: Texte groß (am Desktop rund 1,5-fach), Textblöcke fast über die ganze Breite */
+/* Wolkenfoto hell und durchscheinend, Texte dunkel */
+.himmel { background: #fff; }
+.himmel-bild { opacity: .4; }
+.himmel .innen { text-shadow: none; }
+/* Große Texte im Terminkasten in Fredoka, Unterzeile in Großbuchstaben */
+.termin h3 { font-family: var(--titel); font-weight: 700; }
+#aktuell .termin .art { font-family: var(--titel); font-weight: 600; text-transform: none; letter-spacing: normal; }
+/* Überschriften wieder orange (heller Hintergrund) */
+.rubrik, .nacht .rubrik, .himmel section.nacht .rubrik { color: var(--orange); }
+/* Adresse unter dem Logo groß in Space Mono */
+.wolken p { font: 700 clamp(1.25rem, 3vw, 2.4rem)/1.2 var(--text); letter-spacing: 0; }
+/* Name wie Unterzeile, Hinweise ohne Fettdruck */
+#aktuell .termin h3 { font-weight: 600; text-transform: none; }
+#aktuell .termin .zusatz b { font-weight: inherit; }
+/* Alle Texte schwarz statt grau */
+.termin .unter, #raum figcaption, .person p, .kontakt h3, .fuss small { color: var(--tinte); }
+/* Space Mono enger: Buchstaben und Wortabstände etwas zusammenrücken */
+body { letter-spacing: -.035em; word-spacing: -.3em; }
+:where(.rubrik, .termin h3, .termin .art, .datum, .datum *, .raum-fuer-alles, .hinweis a, .menschen-foto figcaption, .projekt h3, .menue a, .heute) { letter-spacing: normal; word-spacing: normal; }
+/* RAUM: Fotos mit schwarzem Rand, eckig, alle gleich groß im Raster */
+.raumbilder img { border: 7px solid #fff; border-radius: 0; }
+.raumbilder figure:last-child { grid-column: auto; }
+.raumbilder figure:last-child img { aspect-ratio: 4 / 3; }
+/* Texte aus Weltraumtext.odt: mehrere Absätze mit Abstand */
+.textblock { display: grid; gap: .9em; font-size: clamp(1.25rem, 2.5vw, 2.25rem); }
+.textblock .lead { margin: 0; }
+/* RAUM: Portal-Foto im Hochformat, über zwei Reihen */
+@media (min-width: 601px) { .raumbilder figure:first-child { grid-row: span 2; } }
+.raumbilder figure:first-child img { aspect-ratio: 3 / 4; }
+/* MENSCHEN: Foto als Kreis mit weißem Rand wie bei RAUM */
+.menschen-foto { max-width: 30rem; }
+.menschen-foto img { aspect-ratio: 1; object-fit: cover; object-position: 50% 60%; border-radius: 50%; border: 7px solid #fff; }
+/* MENSCHEN: rundes Foto, der Text fließt mit Abstand im Bogen daneben */
+.menschen::after { content: ""; display: block; clear: both; }
+.menschen-kreis { display: block; width: min(100%, 22rem); aspect-ratio: 1; object-fit: cover; border-radius: 50%; border: 7px solid #fff; box-shadow: var(--schatten); margin: 0 auto 1.5rem; }
+.menschen-text { font-size: clamp(1.15rem, 2vw, 1.75rem); line-height: 1.45; }
+.menschen-text p { margin: 0 0 .9em; }
+.menschen-text a { color: inherit; text-underline-offset: .2em; }
+@media (min-width: 761px) {
+  .menschen-kreis { float: left; width: clamp(16rem, 26vw, 24rem); margin: 0 1rem 1rem 0; shape-outside: circle(50%); shape-margin: 1.75rem; }
+}
+/* Überschriften: Fredoka-Unterschneidung aus (bei ARCHIV klebten I und V zusammen) */
+.rubrik { font-kerning: none; }
+/* ARCHIV: Unterzeile wie die Überschrift, orange, gleiche Größe, Großbuchstaben */
+#archiv .rubrik small, .himmel #archiv .rubrik small { font: 400 clamp(1.25rem, 2.5vw, 2.25rem)/1.4 var(--text); font-style: normal; text-transform: none; color: var(--tinte); letter-spacing: -.035em; word-spacing: -.3em; margin-top: .4em; }
+/* Alle dunklen Texte in Dunkelblau statt Schwarz */
+:root { --tinte: #1a2a6c; --nacht-grau: #1a2a6c; }
+/* Impressum und Datenschutz: ruhig, kleinere Schrift, gut lesbar */
+.recht { margin-top: clamp(2.5rem, 5vw, 4rem); max-width: 52rem; font-size: clamp(1rem, 1.3vw, 1.15rem); line-height: 1.55; color: var(--tinte); }
+.recht h3 { font: 700 clamp(1.4rem, 2.4vw, 2rem)/1.2 var(--titel); color: var(--orange); margin: 0 0 1rem; letter-spacing: normal; word-spacing: normal; }
+.recht p { margin: 0 0 1em; }
+.recht b { font-weight: 700; }
+.recht a, .kontakt a { color: inherit; text-underline-offset: .2em; }
+.menschen-kreis { object-position: 50% 100%; }
+/* Space Mono: Blocksatz reißt Lücken, darum linksbündig */
+.lead.intro { text-align: left; }
+/* Rand wie beim ARCHIV: Inhalt 80 % breit, links und rechts je 10 % Abstand */
+@media (min-width: 761px) { :root { --breite: 80vw; } }
+.termin { margin-inline: auto; }
+.termin .datum span { font: 700 var(--gross)/1.1 var(--titel); color: var(--orange); }
+.termin .art { font: 600 var(--gross)/1.1 var(--text); margin: 0 0 .9rem; }
+.lead, .lead.intro, .vision-text, #raum .lead { font-size: clamp(1.25rem, 2.5vw, 2.25rem); line-height: 1.4; max-width: none; }
+.termin { --normal: clamp(1.2rem, 2.1vw, 1.9rem); --gross: clamp(2rem, 3.9vw, 3.45rem); max-width: min(100%, 64rem); }
+.rubrik, .nacht .rubrik, .himmel section.nacht .rubrik { font-size: clamp(2.4rem, 4.2vw, 3.75rem); }
+.raum-fuer-alles { font-size: clamp(1.4rem, 2.7vw, 2.4rem); }
+#archiv .rubrik small { font-size: clamp(1.1rem, 1.95vw, 1.65rem); }
+.himmel .hinweis p { font-size: clamp(1.2rem, 2.1vw, 1.9rem); }
+#raum figcaption { font-size: clamp(1rem, 1.45vw, 1.3rem); }
+.menschen-foto { max-width: 46rem; }
+.menschen-foto figcaption { font-size: clamp(1.25rem, 2.1vw, 1.9rem); }
+#projekte .projekt h3 { font-size: clamp(1.4rem, 2.7vw, 2.4rem); }
+#projekte .projekt .marke, #projekte .projekt .namen, #projekte .projekt summary { font-size: clamp(.95rem, 1.35vw, 1.2rem); }
+#projekte .projekt .fliess { font-size: clamp(1.1rem, 1.65vw, 1.5rem); max-width: none; }
+.kontakt h3 { font-size: clamp(.95rem, 1.2vw, 1.05rem); }
+.kontakt p { font-size: clamp(1.2rem, 1.8vw, 1.65rem); }
+.kontakt { grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
+/* RAUM: Steckbrief in vier Spalten (Handy: untereinander) */
+.raumliste { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 1.5rem 2rem; margin: 0 0 2.5rem; font-size: clamp(1.05rem, 1.5vw, 1.35rem); line-height: 1.45; color: var(--tinte); }
+.raumliste h3 { font: 700 clamp(1.3rem, 2vw, 1.75rem)/1.2 var(--titel); color: var(--orange); margin: 0 0 .5rem; letter-spacing: normal; word-spacing: normal; }
+.raumliste ul { margin: 0; padding: 0 0 0 1.1em; }
+.raumliste li { margin: 0 0 .3em; }

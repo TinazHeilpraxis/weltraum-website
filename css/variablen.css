@@ -1,0 +1,12 @@
+/* Farben und Schriften an einer Stelle. Hier ändern, dann gilt es überall. */
+:root {
+  /* Farben */
+  --orange: #ff7f3a;       /* Überschriften, Datum, Kästen */
+  --tinte: #1a2a6c;        /* alle Texte (Dunkelblau) */
+  --dunkelblau: #1a2a6c;
+  --nacht-grau: #1a2a6c;
+  --papier: #fbfcff;       /* Hintergrund ganz oben */
+  /* Schriften */
+  --titel: "Fredoka", "Arial Rounded MT Bold", system-ui, sans-serif;   /* Überschriften, Namen, Datum */
+  --text: "Space Mono", "Courier New", ui-monospace, monospace;         /* Fließtext */
+}
