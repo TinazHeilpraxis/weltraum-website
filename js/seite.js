@@ -1,3 +1,16 @@
+// Videos mit Ton: kleiner Lautsprecher-Knopf zum Ein- und Ausschalten (Browser spielen nur stumm von selbst ab)
+(function () {
+  const leise = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 9l5 6M21 9l-5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+  const laut = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+  document.querySelectorAll('.termin video[data-ton]').forEach(v => {
+    const rahmen = document.createElement('div'); rahmen.className = 'video-rahmen';
+    v.parentNode.insertBefore(rahmen, v); rahmen.appendChild(v);
+    const knopf = document.createElement('button'); knopf.type = 'button'; knopf.className = 'ton-knopf';
+    const zeige = () => { knopf.innerHTML = v.muted ? leise : laut; knopf.setAttribute('aria-label', v.muted ? 'Ton einschalten' : 'Ton ausschalten'); };
+    knopf.addEventListener('click', () => { v.muted = !v.muted; if (!v.muted) { v.currentTime = 0; v.play(); } zeige(); });
+    zeige(); rahmen.appendChild(knopf);
+  });
+})();
 // AKTUELL: Termine, deren Datum vorbei ist, wandern automatisch ins ARCHIV (ganz nach vorn).
 // Jeder Terminkasten trägt data-bis="JJJJ-MM-TT" (letzter Tag des Termins).
 (function () {
