@@ -1,3 +1,26 @@
+// AKTUELL: Termine, deren Datum vorbei ist, wandern automatisch ins ARCHIV (ganz nach vorn).
+// Jeder Terminkasten trägt data-bis="JJJJ-MM-TT" (letzter Tag des Termins).
+(function () {
+  const heute = new Date(); heute.setHours(0, 0, 0, 0);
+  const archiv = document.querySelector('.archiv');
+  const termine = [...document.querySelectorAll('.termin[data-bis]')];
+  const vorbei = termine.filter(t => new Date(t.dataset.bis + 'T23:59:59') < heute);
+  // neueste zuerst ins Archiv
+  vorbei.sort((a, b) => b.dataset.bis.localeCompare(a.dataset.bis)).reverse().forEach(t => {
+    const bild = t.querySelector('img');
+    if (archiv && bild) {
+      const f = document.createElement('figure');
+      const kopie = bild.cloneNode(); kopie.loading = 'lazy';
+      f.appendChild(kopie); archiv.prepend(f);
+    }
+    t.remove();
+  });
+  const aktuell = document.querySelector('#aktuell .innen');
+  if (aktuell && !aktuell.querySelector('.termin')) {
+    const p = document.createElement('p'); p.className = 'lead'; p.textContent = 'Neue Termine folgen in Kürze.';
+    aktuell.appendChild(p);
+  }
+})();
 // Handy: Menü auf- und zuklappen
 (function () {
   const kopf = document.querySelector('.kopf'), knopf = document.querySelector('.menue-knopf');
