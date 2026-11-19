@@ -343,3 +343,7 @@ body { letter-spacing: -.035em; word-spacing: -.3em; }
 .wolken .logo { top: 50%; bottom: auto; transform: translate(-50%, -50%); opacity: 1; filter: brightness(0) invert(1) drop-shadow(0 2px 3px rgb(16 28 70 / .7)) drop-shadow(0 0 14px rgb(16 28 70 / .55)) drop-shadow(0 0 40px rgb(16 28 70 / .45)); }
 .wolken p { font-weight: 400; text-shadow: 0 1px 3px rgb(16 28 70 / .6), 0 0 18px rgb(16 28 70 / .45); }
 @media (max-width: 760px) { .wolken .logo { top: 50%; bottom: auto; } }
+
+/* Terminkasten mit Video statt Bild */
+.termin video { display: block; width: min(100%, 34rem); height: auto; max-height: 85vh; margin-inline: auto; border-radius: 14px; background: #fff; }
+.archiv video { display: block; width: 100%; border: 3px solid #fff; border-radius: 6px; box-shadow: var(--schatten); }

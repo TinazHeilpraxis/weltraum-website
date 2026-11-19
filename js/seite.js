@@ -7,10 +7,10 @@
   const vorbei = termine.filter(t => new Date(t.dataset.bis + 'T23:59:59') < heute);
   // neueste zuerst ins Archiv
   vorbei.sort((a, b) => b.dataset.bis.localeCompare(a.dataset.bis)).reverse().forEach(t => {
-    const bild = t.querySelector('img');
+    const bild = t.querySelector('img, video');
     if (archiv && bild) {
       const f = document.createElement('figure');
-      const kopie = bild.cloneNode(); kopie.loading = 'lazy';
+      const kopie = bild.cloneNode(); if (kopie.tagName === 'IMG') kopie.loading = 'lazy';
       f.appendChild(kopie); archiv.prepend(f);
     }
     t.remove();
